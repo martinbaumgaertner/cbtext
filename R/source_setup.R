@@ -14,7 +14,7 @@
 #' }
 #' @rdname source_setup
 #' @export 
-source_setup<-function(data_path,name,folder=c("minutes", "pc"),urls=NULL){
+source_setup<-function(data_path,name,folder=c("minutes", "pc"),urls=list(voting_url = NA,speeches_url=NA)){
   folder<-source_folder(data_path,name)
   out<-list(name=name,url=urls,folder=folder)
   return(out)
