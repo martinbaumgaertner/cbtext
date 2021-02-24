@@ -1,0 +1,6 @@
+^LICENSE\.md$
+^README\.Rmd$
+^\.travis\.yml$
+^\.github$
+^.*\.Rproj$
+^\.Rproj\.user$

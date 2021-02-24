@@ -1,0 +1,18 @@
+Package: cbtext
+Title: scrape central banks
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Martin",
+           family = "Baumgärtner",
+           role = c("aut", "cre"),
+           email = "martin.baumgaertner@posteo.de",
+           comment = c(Homepage = "www.martinbaumgaertner.de"))
+Description: This package scrape the internet to get central bank texts into R.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
