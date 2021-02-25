@@ -1,0 +1,10 @@
+load_data_from_links<-function(links,type,cb){
+  tib<-create_tibble(doc_features()$doc_features,length(links))
+  future::plan(multisession)
+  tib$text<-future.apply::future_lapply(as.list(links), 
+                                        read_text,sour=cb,future.seed=TRUE)
+  tib$link<-links
+  tib$type<-type
+  tib$cb<-cb
+  return(tib)
+}

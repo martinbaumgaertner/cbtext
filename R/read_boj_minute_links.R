@@ -5,4 +5,4 @@ read_boj_minute_links<-function(x){
     rvest::html_attr("href")
   paste0("https://www.boj.or.jp",part)
 }
-?read_html
+
