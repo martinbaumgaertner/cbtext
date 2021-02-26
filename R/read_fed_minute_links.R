@@ -2,7 +2,7 @@ read_fed_minute_links<-function(part="minutes",restrict_to="nothing"){
   new_part<-xml2::read_html(paste0("https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"))%>%
     rvest::html_nodes("a")%>%
     rvest::html_attr("href")
-  future::plan("multisession")
+  future::plan(future::multisession)
   old_part<-unlist(future.apply::future_lapply(as.list(1977:(lubridate::year(Sys.time())-6)),read_htmlcb,
                    part1="https://www.federalreserve.gov/monetarypolicy/fomchistorical",
                    part2=".htm",future.seed=TRUE))
@@ -48,7 +48,7 @@ read_fed_minute_links<-function(part="minutes",restrict_to="nothing"){
   full<-paste0("https://www.federalreserve.gov",full)
   
   if(part=="pc"){
-    future::plan("multisession")
+    future::plan(future::multisession)
     full<-unlist(future.apply::future_lapply(as.list(full),fed_pc))
   }
   return(full)

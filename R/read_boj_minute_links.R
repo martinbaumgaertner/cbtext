@@ -6,3 +6,11 @@ read_boj_minute_links<-function(x){
   paste0("https://www.boj.or.jp",part)
 }
 
+
+
+
+
+
+x=2010
+https://www.boj.or.jp/en/mopo/outlook/index.htm/
+https://www.boj.or.jp/en/announcements/release_2011/k111221a.pdf

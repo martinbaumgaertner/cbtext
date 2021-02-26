@@ -4,11 +4,11 @@ get_links<-function(source,part){
       links<-read_boe_minute_links()
     }
     if(source$name%in%"boj"){
-      future::plan(multisession)
+      future::plan(future::multisession)
       links<-unlist(future.apply::future_lapply(as.list(1998:(year(Sys.time() %m-% months(3)))), read_boj_minute_links)) #3 month delay for boj
     }
     if(source$name%in%"ecb"){
-      future::plan(multisession)
+      future::plan(future::multisession)
       links<-unlist(future.apply::future_lapply(as.list(2015:(year(Sys.time() %m-% months(3)))), read_ecb_minute_links))
     }
     if(source$name%in%"fed"){
@@ -248,7 +248,111 @@ get_links<-function(source,part){
       stop(paste0(part," is currently not supported for ",source$name))
     }
   }
+  if(part=="economic_outlook"){
+    if(source$name%in%"boe"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"boj"){
+      future::plan(future::multisession)
+      links<-unlist(future.apply::future_lapply(as.list(1998:(lubridate::year(Sys.time()))), read_boj_monthlyoutlook_links))
+    }
+    if(source$name%in%"ecb"){
+      future::plan(future::multisession)
+      links<-unlist(future.apply::future_lapply(as.list(2004:(lubridate::year(Sys.time()))), read_ecb_interviews_links))
+    }
+    if(source$name%in%"fed"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"poland"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"iceland"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+  }
+  if(part=="interview"){
+    if(source$name%in%"boe"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"boj"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"ecb"){
+      future::plan(future::multisession)
+      links<-unlist(future.apply::future_lapply(as.list(2004:(lubridate::year(Sys.time()))), read_ecb_interviews_links))
+    }
+    if(source$name%in%"fed"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"poland"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"iceland"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+  }
+  if(part=="blog"){
+    if(source$name%in%"boe"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"boj"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"ecb"){
+      future::plan(future::multisession)
+      links<-unlist(future.apply::future_lapply(as.list(2021:(lubridate::year(Sys.time()))), read_ecb_blog_links))
+    }
+    if(source$name%in%"fed"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"poland"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"iceland"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+  }
+  if(part=="release"){
+    if(source$name%in%"boe"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"boj"){
+      future::plan(future::multisession)
+      links<-unlist(future.apply::future_lapply(as.list(1998:(year(Sys.time() %m-% months(3)))), read_boj_minute_links))
+    }
+    if(source$name%in%"ecb"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"fed"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"poland"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"iceland"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+  }
+  if(part=="outlook_report"){
+    if(source$name%in%"boe"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"boj"){
+      links<-read_boj_economicoutlook_links()
+    }
+    if(source$name%in%"ecb"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"fed"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"poland"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+    if(source$name%in%"iceland"){
+      stop(paste0(part," is currently not supported for ",source$name))
+    }
+  }
   
   return(links)
 }
-part="beige"

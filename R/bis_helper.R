@@ -109,7 +109,7 @@ extract_text<-function(x){
     dplyr::mutate(links=dplyr::if_else(RCurl::url.exists(links),links,gsub(".pdf",".htm",links))) %>% 
     pull(links)
   
-  future::plan("multisession")
+  future::plan(future::multisession)
   texts<-unlist(future.apply::future_lapply(as.list(links),process_text))
   
   return(texts)

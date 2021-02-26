@@ -6,7 +6,7 @@ library(pdftools)
 library("future.apply")
 library(lubridate)
 
-source<-list(name="fed")
+source<-list(name="boj")
 parts="pc"
 scrape_source<-function(source,parts){
   output<-list()
@@ -64,11 +64,34 @@ scrape_source<-function(source,parts){
     red_links<-get_links(source,part="red")
     output$red<-load_data_from_links(red_links,"red",source$name)
   }
+  if("economic_outlook" %in% parts){
+    links<-get_links(source,part="economic_outlook")
+    output$economic_outlook<-load_data_from_links(links,"economic_outlook",source$name)
+  }
+  if("interview" %in% parts){
+    links<-get_links(source,part="interview")
+    output$interview<-load_data_from_links(links,"interview",source$name)
+  }
+  if("blog" %in% parts){
+    links<-get_links(source,part="blog")
+    output$blog<-load_data_from_links(links,"blog",source$name)
+  }
+  if("release" %in% parts){
+    links<-get_links(source,part="release")
+    output$release<-load_data_from_links(links,"release",source$name)
+  }
+  if("outlook_report" %in% parts){
+    links<-get_links(source,part="outlook_report")
+    output$outlook_report<-load_data_from_links(links,"outlook_report",source$name)
+  }
+  
   
   return(output)
 }
 
-x<-scrape_source(list(name="fed"),c("transkript","blue","green_sub","tealb"))
+x<-scrape_source(list(name="ecb"),c("interview"))
+
+x$interview[1,]$text
 
 
 
