@@ -3,12 +3,12 @@ library(dplyr)
 library(rvest)
 library(data.table)
 library(pdftools)
-library("future.apply")
+library(future.apply)
 library(lubridate)
 
 source<-list(name="boj")
 parts="pc"
-scrape_source<-function(source,parts){
+scrape_source<-function(source,parts,page=668){
   output<-list()
   
   if("minutes" %in% parts){
@@ -21,7 +21,7 @@ scrape_source<-function(source,parts){
   }
   if("speeches"%in% parts){
     if(source$name=="bis"){
-      output$speech<-find_process_bis(1)
+      output$speech<-find_process_bis(page)
     }
   }
   if("beige" %in% parts){
@@ -88,12 +88,26 @@ scrape_source<-function(source,parts){
   
   return(output)
 }
+library(tidyverse)
+x<-scrape_source(list(name="bis"),c("speeches"),page=10)
 
-x<-scrape_source(list(name="ecb"),c("interview"))
+xml2::read_html("https://www.bis.org/cbspeeches/index.htm?cbspeeches") %>% 
+  #rvest::html_nodes("html.js.localstorage.sessionstorage.rgba.opacity.boxshadow.flexbox.vcawhfdmws.idc0_328 body div#body.dt.tagwidth div#bispage div#pagecontent div#_cbspeeches_index_htm div.fullwidth-outer div.fullwidth-inner div#container.document_container div#center.defaultstyles.overridedefault.under900.under950 div#cmsContent div#cbspeeches.bisobj_document_list div.list div#cbspeeches_list.list div div.listtop.noprint") %>% 
+  read_lines()
+.listitems > b:nth-child(1)
 
 x$interview[1,]$text
-
-
-
+?str_detect
+spacyr::find_spacy()
+?find_spacy
+library(spacyr)
+spacy_download_langmodel(
+  model = "en",
+  envname = "spacy_condaenv",
+  conda = "auto"
+)
+spacy_initialize(model = "en_core_web_sm")
+?spacy_download_langmodel
 x$minutes %>% 
   filter(type=="minutes")
+

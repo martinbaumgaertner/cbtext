@@ -49,7 +49,7 @@ read_fed_minute_links<-function(part="minutes",restrict_to="nothing"){
   
   if(part=="pc"){
     future::plan(future::multisession)
-    full<-unlist(future.apply::future_lapply(as.list(full),fed_pc))
+    full<-unlist(future.apply::future_lapply(as.list(full),fed_pc,future.seed=TRUE))
   }
   return(full)
 }

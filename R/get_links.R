@@ -5,11 +5,11 @@ get_links<-function(source,part){
     }
     if(source$name%in%"boj"){
       future::plan(future::multisession)
-      links<-unlist(future.apply::future_lapply(as.list(1998:(year(Sys.time() %m-% months(3)))), read_boj_minute_links)) #3 month delay for boj
+      links<-unlist(future.apply::future_lapply(as.list(1998:(year(Sys.time() %m-% months(3)))), read_boj_minute_links,future.seed=TRUE)) #3 month delay for boj
     }
     if(source$name%in%"ecb"){
       future::plan(future::multisession)
-      links<-unlist(future.apply::future_lapply(as.list(2015:(year(Sys.time() %m-% months(3)))), read_ecb_minute_links))
+      links<-unlist(future.apply::future_lapply(as.list(2015:(year(Sys.time() %m-% months(3)))), read_ecb_minute_links,future.seed=TRUE))
     }
     if(source$name%in%"fed"){
       links<-read_fed_minute_links(part=part,restrict_to = "html")
@@ -30,7 +30,7 @@ get_links<-function(source,part){
     }
     if(source$name%in%"ecb"){
       future::plan(multisession)
-      links<-unlist(future.apply::future_lapply(as.list(1999:(year(Sys.time()))), read_ecb_pc_links))
+      links<-unlist(future.apply::future_lapply(as.list(1999:(year(Sys.time()))), read_ecb_pc_links,future.seed=TRUE))
     }
     if(source$name%in%"fed"){
       links<-read_fed_minute_links(part="pc")
@@ -45,7 +45,7 @@ get_links<-function(source,part){
   if(part=="speech"){
     if(source$name%in%"bis"){
       future::plan(multisession)
-      links<-unlist(future.apply::future_lapply(as.list(1999:(year(Sys.time()))), read_ecb_pc_links))
+      links<-unlist(future.apply::future_lapply(as.list(1999:(year(Sys.time()))), read_ecb_pc_links,future.seed=TRUE))
     }
   }
   if(part=="beige"){
@@ -254,11 +254,11 @@ get_links<-function(source,part){
     }
     if(source$name%in%"boj"){
       future::plan(future::multisession)
-      links<-unlist(future.apply::future_lapply(as.list(1998:(lubridate::year(Sys.time()))), read_boj_monthlyoutlook_links))
+      links<-unlist(future.apply::future_lapply(as.list(1998:(lubridate::year(Sys.time()))), read_boj_monthlyoutlook_links,future.seed=TRUE))
     }
     if(source$name%in%"ecb"){
       future::plan(future::multisession)
-      links<-unlist(future.apply::future_lapply(as.list(2004:(lubridate::year(Sys.time()))), read_ecb_interviews_links))
+      links<-unlist(future.apply::future_lapply(as.list(2004:(lubridate::year(Sys.time()))), read_ecb_interviews_links,future.seed=TRUE))
     }
     if(source$name%in%"fed"){
       stop(paste0(part," is currently not supported for ",source$name))
@@ -279,7 +279,7 @@ get_links<-function(source,part){
     }
     if(source$name%in%"ecb"){
       future::plan(future::multisession)
-      links<-unlist(future.apply::future_lapply(as.list(2004:(lubridate::year(Sys.time()))), read_ecb_interviews_links))
+      links<-unlist(future.apply::future_lapply(as.list(2004:(lubridate::year(Sys.time()))), read_ecb_interviews_links,future.seed=TRUE))
     }
     if(source$name%in%"fed"){
       stop(paste0(part," is currently not supported for ",source$name))
@@ -300,7 +300,7 @@ get_links<-function(source,part){
     }
     if(source$name%in%"ecb"){
       future::plan(future::multisession)
-      links<-unlist(future.apply::future_lapply(as.list(2021:(lubridate::year(Sys.time()))), read_ecb_blog_links))
+      links<-unlist(future.apply::future_lapply(as.list(2021:(lubridate::year(Sys.time()))), read_ecb_blog_links,future.seed=TRUE))
     }
     if(source$name%in%"fed"){
       stop(paste0(part," is currently not supported for ",source$name))
@@ -318,7 +318,7 @@ get_links<-function(source,part){
     }
     if(source$name%in%"boj"){
       future::plan(future::multisession)
-      links<-unlist(future.apply::future_lapply(as.list(1998:(year(Sys.time() %m-% months(3)))), read_boj_minute_links))
+      links<-unlist(future.apply::future_lapply(as.list(1998:(year(Sys.time() %m-% months(3)))), read_boj_minute_links,future.seed=TRUE))
     }
     if(source$name%in%"ecb"){
       stop(paste0(part," is currently not supported for ",source$name))

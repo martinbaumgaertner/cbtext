@@ -4,7 +4,7 @@ get_bis_countries<-function(){
     rvest::html_nodes("table") %>%
     rvest::html_table(fill = T) %>% 
     .[[1]] %>% 
-    as_tibble(.,.name_repair = c("unique")) %>% 
+    dplyr::as_tibble(.,.name_repair = c("unique")) %>% 
     dplyr::rename("country"=1,"cb"=2) %>% 
     dplyr::filter(cb!="") %>% 
     dplyr::mutate(country=if_else(country=="", "United States" ,country))
