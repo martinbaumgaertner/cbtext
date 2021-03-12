@@ -8,6 +8,8 @@
 [![Travis build
 status](https://travis-ci.com/martinbaumgaertner/cbtext.svg?branch=master)](https://travis-ci.com/martinbaumgaertner/cbtext)
 [![R-CMD-check](https://github.com/martinbaumgaertner/cbtext/workflows/R-CMD-check/badge.svg)](https://github.com/martinbaumgaertner/cbtext/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/martinbaumgaertner/cbtext/branch/master/graph/badge.svg)](https://codecov.io/gh/martinbaumgaertner/cbtext?branch=master)
 <!-- badges: end -->
 
 The goal of cbtext is to provide an easy way to collect and read central
@@ -38,29 +40,25 @@ library(cbtext)
 ## basic example code
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+With this package you can scrape several central bank texts
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+scrape_source(list(name="ecb"),c("minutes"))
+#> Find minutes
+#> $minutes
+#> # A tibble: 48 x 13
+#>    title text                    speaker cb    country speaker_position location
+#>    <lgl> <chr>                   <lgl>   <chr> <lgl>   <lgl>            <lgl>   
+#>  1 NA    "Account of the moneta~ NA      ecb   NA      NA               NA      
+#>  2 NA    "Account of the moneta~ NA      ecb   NA      NA               NA      
+#>  3 NA    "Account of the moneta~ NA      ecb   NA      NA               NA      
+#>  4 NA    "Account of the moneta~ NA      ecb   NA      NA               NA      
+#>  5 NA    "Account of the moneta~ NA      ecb   NA      NA               NA      
+#>  6 NA    "Account of the moneta~ NA      ecb   NA      NA               NA      
+#>  7 NA    "Account of the moneta~ NA      ecb   NA      NA               NA      
+#>  8 NA    "Account of the moneta~ NA      ecb   NA      NA               NA      
+#>  9 NA    "Account of the moneta~ NA      ecb   NA      NA               NA      
+#> 10 NA    "Account of the moneta~ NA      ecb   NA      NA               NA      
+#> # ... with 38 more rows, and 6 more variables: date <dttm>, release_date <lgl>,
+#> #   type <chr>, chapter <lgl>, language <chr>, link <chr>
 ```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/master/examples>.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
