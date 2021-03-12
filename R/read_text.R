@@ -1,4 +1,3 @@
-x<-"http://archive.riksbank.se/Documents/Rapporter/PPR/2016/160907/rap_ppr_160907_eng_r%C3%A4ttelse.pdf"
 read_text<-function(x,sour){
   if(grepl(".pdf",x)){
     suppressMessages(pdftools::pdf_text(x)) %>% 

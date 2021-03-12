@@ -8,9 +8,9 @@ if(source$name=="boe"){
     future::plan(future::multisession)
     links<-unlist(future.apply::future_lapply(as.list(1998:(lubridate::year(Sys.time() - months(3)))), read_boj_minute_links,future.seed=TRUE)) #3 month delay for boj
     }
-    if(part=="economic_outlook"){
+    if(part=="economic_report"){
       future::plan(future::multisession)
-      links<-unlist(future.apply::future_lapply(as.list(1998:(lubridate::year(Sys.time()))), read_boj_monthlyoutlook_links,future.seed=TRUE))
+      links<-unlist(future.apply::future_lapply(as.list(1998:2015), read_boj_monthlyreport_links,future.seed=TRUE))
     }
     if(part=="release"){
       future::plan(future::multisession)

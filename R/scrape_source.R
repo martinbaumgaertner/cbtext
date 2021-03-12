@@ -12,7 +12,7 @@
 #'   x<-scrape_source(list(name="ecb"),c("minutes","pc","economic_outlook","blog"))
 #'   x<-scrape_source(list(name="fed"),c("minutes","pc","red","transkript","agenda",
 #'   "blue","green_sub","teala","tealb","green1","green2","beige"))
-#'   x<-scrape_source(list(name="boj"),c("minutes","economic_outlook","release","outlook_report"))
+#'   x<-scrape_source(list(name="boj"),c("minutes","economic_report","release","outlook_report"))
 #'   x<-scrape_source(list(name="poland"),c("minutes"))
 #'   x<-scrape_source(list(name="iceland"),c("minutes"))
 #'   x<-scrape_source(list(name="australia"),c("minutes"))
@@ -35,5 +35,3 @@ scrape_source<-function(source,parts,page=668){
   }
   return(output)
 }
-
-
