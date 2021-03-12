@@ -1,5 +1,5 @@
 read_iceland_minute_links<-function(part){
-  full<-unlist(future_lapply(as.list(2009:year(Sys.time())),read_htmlcb,
+  full<-unlist(future.apply::future_lapply(as.list(2009:lubridate::year(Sys.time())),read_htmlcb,
                        part1="https://www.cb.is/monetary-policy/monetary-policy-committee/?year=",
                        part2="",future.seed=TRUE))
 

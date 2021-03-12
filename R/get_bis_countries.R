@@ -7,7 +7,7 @@ get_bis_countries<-function(){
     dplyr::as_tibble(.,.name_repair = c("unique")) %>% 
     dplyr::rename("country"=1,"cb"=2) %>% 
     dplyr::filter(cb!="") %>% 
-    dplyr::mutate(country=if_else(country=="", "United States" ,country))
+    dplyr::mutate(country=dplyr::if_else(country=="", "United States" ,country))
   
   countries_cb[8,"cb"]<-paste("Reserve Bank of Australia","Australian Reserve Bank",sep="|")
   countries_cb[9,"cb"]<-paste("National Bank of the Republic of Austria","Oesterreichische Nationalbank",sep="|")

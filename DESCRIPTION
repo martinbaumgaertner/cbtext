@@ -1,6 +1,6 @@
 Package: cbtext
 Title: scrape central banks
-Version: 0.0.0.9000
+Version: 0.1
 Authors@R: 
     person(given = "Martin",
            family = "Baumgärtner",
@@ -14,7 +14,26 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    covr
 Config/testthat/edition: 3
 Imports: 
-    magrittr
+    magrittr,
+    dplyr,
+    rvest,
+    data.table,
+    pdftools,
+    future.apply,
+    lubridate,
+    cld3,
+    future,
+    RCurl,
+    readr,
+    readtext,
+    spacyr,
+    stringr,
+    tidyRSS,
+    vctrs,
+    xml2,
+    stats,
+    utils

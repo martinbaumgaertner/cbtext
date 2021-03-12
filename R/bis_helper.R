@@ -1,6 +1,6 @@
 extract_speaker<-function(x){
   out<-stringr::str_split(x$item_title,":")
-  out<-sapply( out, head, 1 )
+  out<-sapply( out, utils::head, 1 )
   
 }
 extract_title<-function(x){
@@ -48,7 +48,7 @@ extract_date<-function(x){
     stringr::str_remove_all("Seminar on his") %>% 
     stringr::str_replace_all("on the European Commission's proposal of 29 January 2014 for a regulation on the separation of certain trading activities from credit institutions.","29 January 2014") %>% 
     stringr::str_split(.,",") %>% 
-    sapply( ., tail, 1 )%>% 
+    sapply( ., utils::tail, 1 )%>% 
     dplyr::tibble(date=.) %>% 
     dplyr::mutate(date=ifelse(stringr::str_detect(date," on "),stringr::str_split(date," on (?=\\d{1,2})",simplify=T)[,2],date)) %>% 
     dplyr::mutate(date=ifelse(stringr::str_detect(date,"-"),get_last_date(date)%>% 
@@ -66,7 +66,7 @@ get_last_date<-function(x){
   x%>%
     stringr::str_split(.,"-",simplify = T) %>% 
     dplyr::as_tibble(.,.name_repair = ~ vctrs::vec_as_names(..., repair = "unique", quiet = TRUE)) %>% 
-    dplyr::select(2) %>% pull() %>% stringr::str_remove(.,"^_") 
+    dplyr::select(2) %>% dplyr::pull() %>% stringr::str_remove(.,"^_") 
   
 }
 search_cb<-function(strings,aux_string,countrys){
