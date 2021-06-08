@@ -44,8 +44,8 @@ if(source$name=="boe"){
       if(part=="minutes"){
         links<-read_fed_minute_links(part=part,restrict_to = "html")
       }
-      if(part=="pc"){
-        links<-read_fed_minute_links(part="pc")
+      if(part%in%c("pc","statement")){
+        links<-read_fed_minute_links(part=part)
       }
       if(part%in%c("beige","green1","green2","teala","tealb","green_sub","blue","agenda","transkript","red")){
         links<-read_fed_minute_links(part=part,restrict_to = "pdf")

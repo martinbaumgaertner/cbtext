@@ -1,4 +1,4 @@
-read_fed_minute_links<-function(part="minutes",restrict_to="nothing"){
+read_fed_links<-function(part="minutes",restrict_to="nothing"){
   new_part<-xml2::read_html(paste0("https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"))%>%
     rvest::html_nodes("a")%>%
     rvest::html_attr("href")
@@ -33,6 +33,8 @@ read_fed_minute_links<-function(part="minutes",restrict_to="nothing"){
     filter="redbook"
   }else if(part=="pc"){
     filter="fomcpresconf"
+  }else if(part=="statement"){
+    filter="general|boarddocs|/newsevents/press/monetary/|/newsevents/pressreleases/monetary"
   }
 
   full<-full[grepl(filter,full)]
