@@ -42,13 +42,13 @@ if(source$name=="boe"){
     }
     }else if(source$name=="fed"){
       if(part=="minutes"){
-        links<-read_fed_minute_links(part=part,restrict_to = "html")
+        links<-read_fed_links(part=part,restrict_to = "html")
       }
       if(part%in%c("pc","statement")){
-        links<-read_fed_minute_links(part=part)
+        links<-read_fed_links(part=part)
       }
       if(part%in%c("beige","green1","green2","teala","tealb","green_sub","blue","agenda","transkript","red")){
-        links<-read_fed_minute_links(part=part,restrict_to = "pdf")
+        links<-read_fed_links(part=part,restrict_to = "pdf")
       }
     }else if(source$name=="poland"){
       if(part=="minutes"){
