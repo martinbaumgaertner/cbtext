@@ -49,8 +49,6 @@ read_fed_links<-function(part="minutes",restrict_to="nothing"){
   
   full<-paste0("https://www.federalreserve.gov",full)
   
-  full<-gsub("#phone","",full)
-  
   if(part=="pc"){
     future::plan(future::multisession)
     full<-unlist(future.apply::future_lapply(as.list(full),fed_pc,future.seed=TRUE))
