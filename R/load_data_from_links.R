@@ -11,3 +11,4 @@ load_data_from_links<-function(links,type,cb){
   tib$language<-cld3::detect_language(tib$text)
   return(tib)
 }
+
