@@ -35,6 +35,18 @@ clean_html<-function(x){
   navbar<-x1 %>% 
     rvest::html_nodes(".nav__header")
   xml2::xml_remove(navbar)
+  #ecb footer
+  footer_ecb<-x1 %>% 
+    rvest::html_nodes(".ecb-footerBottom")
+  xml2::xml_remove(footer_ecb)
+  adress_ecb<-x1 %>% 
+    rvest::html_nodes(".address-box.-top-arrow")
+  xml2::xml_remove(adress_ecb)
+  cookies_ecb<-x1 %>% 
+    rvest::html_nodes(".ecb-cookieConsent.hidden")
+  xml2::xml_remove(cookies_ecb)
+  
+  
   
   out<-x1
   return(out)
