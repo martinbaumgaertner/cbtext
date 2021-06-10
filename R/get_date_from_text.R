@@ -31,7 +31,7 @@ get_date_from_text<-function(texts,type){
         
         date_start<-date_NA(paste0(month," ",days[[1]],", ",year))
         date_end<-date_NA(paste0(month," ",days[[2]],", ",year))
-      }else if (stringr::str_detect(texts[i],"and continued on")){
+      }else if (stringr::str_detect(texts[i],"and continued on|and continuing on")){
         
         #sort dates because of pdf sorting mistakes
         dates<-sort(c(date_NA(found_pattern[1]),date_NA(found_pattern[2])))
