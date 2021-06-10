@@ -10,25 +10,34 @@ read_text<-function(x,sour){
       readr::read_lines()%>% 
       paste(collapse = " ")
   }else {
-    
-    if(stringr::str_detect(x,"#")){
-      suppressMessages(xml2::read_html(x))%>% 
-        rvest::html_nodes('p,h1,h2,h3') %>%
-        rvest::html_text()%>%
-        stringr::str_replace_all(.,"\u0092","'") %>% 
-        stringr::str_remove_all(.,'\"') %>% 
-        stringr::str_remove_all(.,"\t") %>% 
-        readr::read_lines()%>% 
-        paste(collapse = " ")
-    }else{
-      suppressMessages(xml2::read_html(url(x)))%>% 
-        rvest::html_nodes('p,h1,h2,h3') %>%
-        rvest::html_text()%>%
-        stringr::str_replace_all(.,"\u0092","'") %>% 
-        stringr::str_remove_all(.,'\"') %>% 
-        stringr::str_remove_all(.,"\t") %>% 
-        readr::read_lines()%>% 
-        paste(collapse = " ")
-    }
+    clean_html(x)%>% 
+      rvest::html_nodes('i,p,h1,h2,h3') %>%
+      rvest::html_text()%>%
+      stringr::str_replace_all(.,"\u0092","'") %>% 
+      stringr::str_remove_all(.,'\"') %>% 
+      stringr::str_remove_all(.,"\t") %>% 
+      readr::read_lines()%>% 
+      paste(collapse = " ")
   }
   }
+
+clean_html<-function(x){
+  if(stringr::str_detect(x,"#")){
+    x1<-suppressMessages(xml2::read_html(x))
+  }else{
+    x1<-suppressMessages(xml2::read_html(url(x)))
+  }
+  #fedheading
+  heading<-x1%>%
+    rvest::html_nodes(".jumbotron.hidden-xs")
+  xml2::xml_remove(heading)
+  #fed sidebar
+  navbar<-x1 %>% 
+    rvest::html_nodes(".nav__header")
+  xml2::xml_remove(navbar)
+  
+  out<-x1
+  return(out)
+}
+
+
