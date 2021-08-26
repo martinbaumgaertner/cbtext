@@ -11,5 +11,6 @@ load_data_from_links<-function(links,type,cb){
   tib$start_date<-dates$start_date
   tib$end_date<-dates$end_date
   tib$language<-cld3::detect_language(tib$text)
+  tib$access_time<-Sys.time()
   return(tib)
 }
