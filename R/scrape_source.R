@@ -26,7 +26,7 @@ scrape_source<-function(source,parts,page=668){
   Sys.setlocale("LC_ALL","English")
   for(part in parts){
     message(paste("Find",part))
-    if(part=="speeces"){
+    if(part=="speeches"){
       output[[part]]<-find_process_bis(page)
     }else{
       links<-get_links(source,part=part)
