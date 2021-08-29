@@ -1,4 +1,5 @@
 get_date_from_text<-function(texts,type){
+  Sys.setlocale("LC_ALL","English")
   date_NA <- function(x) tryCatch(as.Date(x, tryFormats = c("%d/%m/%y","%m/%d/%y", "%Y/%m/%d",
                                                             "%d %B %Y","%d %B, %Y","%B %d, %Y","%dth %B %Y","%d.%m.%y")), error = function(e) NA)
   pattern<-list("\\d{1,2}(th)?(-|–)?(\\d{1,2})?\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)(,)?\\s+\\d{4}.?",
@@ -6,20 +7,24 @@ get_date_from_text<-function(texts,type){
                 "\\d{1,2}\\/\\d{1,2}\\/\\d{1,4}",
                 "\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}",
                 "\\d{1,2}(th)?(-|–)?(\\d{1,2})?\\s+(JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?)(,)?\\s+\\d{4}.?")
+  #output is a list including the start and end date
   out<-list(start_date=as.POSIXlt(as.Date(rep(NA,length(texts)))),
               end_date=as.POSIXlt(as.Date(rep(NA,length(texts)))))
   
   for(i in 1:length(texts)){
     
+    #if type=T split text on "CONFIDENTIAL"
     if(type %in% c("blue","teala","tealb","green1","green2")){
       texts[i]=stringr::str_split(texts[i],"CONFIDENTIAL")[[1]][2]
     }
     
+    #which is the first pattern found in text
     first_pattern<-which.min(rowSums(stringr::str_locate(texts[i],unlist(pattern))))
 
     if(length(first_pattern)!=0){
       found_pattern<-c(stringr::str_extract_all(texts[i],pattern[[first_pattern]],simplify = T))
       
+      #correct encoding mistake
       if(found_pattern[1]==c("29 February 2009")){
         found_pattern[1]=c("28 February 2009")
       }
