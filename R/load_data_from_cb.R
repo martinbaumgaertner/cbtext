@@ -26,10 +26,10 @@ load_data_from_cb<-function(links,type,cb){
     tib$cb<-cb
   }
   
-  
-  dates<-get_date_from_text(tib$text,type)
+  dates<-get_date_from_text(tib$text,cb,type,links)
   tib$start_date<-dates$start_date
   tib$end_date<-dates$end_date
+  tib$release_date<-dates$release_date
   tib$language<-cld3::detect_language(tib$text)
   tib$access_time<-Sys.time()
   return(tib)
