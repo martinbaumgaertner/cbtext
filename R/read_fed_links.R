@@ -36,7 +36,7 @@ read_fed_links<-function(part="minutes",restrict_to="nothing"){
   }else if(part=="statement"){
     filter="general|boarddocs|/newsevents/press/monetary/|/newsevents/pressreleases/monetary"
   }
-
+  
   full<-full[grepl(filter,full)]
   
   if (restrict_to=="html"){
@@ -54,4 +54,13 @@ read_fed_links<-function(part="minutes",restrict_to="nothing"){
     full<-unlist(future.apply::future_lapply(as.list(full),fed_pc,future.seed=TRUE))
   }
   return(full)
+}
+
+fed_pc<-function(x){
+  #fetch pdfs from pressconference site
+  site<-xml2::read_html(x) %>% 
+    rvest::html_nodes("a")%>%
+    rvest::html_attr("href")
+  site<-site[grepl("FOMCpresconf|fomcpresconf",site)]
+  paste0("https://www.federalreserve.gov",site)
 }
