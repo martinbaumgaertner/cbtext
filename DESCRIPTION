@@ -1,6 +1,6 @@
 Package: cbtext
 Title: scrape central banks
-Version: 0.1
+Version: 0.2
 Authors@R: 
     person(given = "Martin",
            family = "Baumgärtner",
