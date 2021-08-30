@@ -32,20 +32,6 @@ And the development version from [GitHub](https://github.com/) with:
 devtools::install_github("martinbaumgaertner/cbtext")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-library(cbtext)
-```
-
-With this package you can scrape several central bank texts
-
-```{r cars}
-scrape_source(list(name="ecb"),c("minutes"))
-```
-
 ## Available central banks and Types
 
 | Central Bank/ Institution         |             | Type                                                                                                                |
@@ -63,3 +49,14 @@ scrape_source(list(name="ecb"),c("minutes"))
 All central bank texts and were selected according to the fact that they were easy to find via HTML. Another criterion is that the text type is clearly delineated within the category.
 
 Very much I would like to extend the tool's range. So if you are missing a central bank or a text type, please send me a message and we will see if this is possible!
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{library(cbtext)}
+x<-scrape_source(list(name="ecb"),c("minutes"))
+x
+```
+
+## 
