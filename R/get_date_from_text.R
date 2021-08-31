@@ -86,8 +86,7 @@ get_date_from_text<-function(texts,cb,type,links){
       if(cb=="iceland"&type=="minutes"){
         #iceland uses 2 days discussing on economic situation and one day on interest. Last day is not found by pattern (Just: %d %B)
         date_end=date_end+1
-      }
-      if(cb=="australia"&type=="minutes"){
+      }else if(cb=="australia"&type=="minutes"){
         #minutes are released 2 weeks after decision
         release_date=date_end+14
       }
