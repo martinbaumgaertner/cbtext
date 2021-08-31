@@ -49,11 +49,7 @@ if this is possible!
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
-
 ``` {library(cbtext)}
 x<-scrape_source(list(name="ecb"),c("minutes"))
 x
 ```
-
-## 
