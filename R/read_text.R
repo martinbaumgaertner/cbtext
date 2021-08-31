@@ -1,8 +1,14 @@
 read_text<-function(x,sour){
   if(grepl(".pdf",x)){
-    suppressMessages(pdftools::pdf_text(x)) %>% 
-      readr::read_lines(.)#%>% 
+    text<-suppressMessages(pdftools::pdf_text(x)) #%>% 
+    
+    if(sum(nchar(text))==0){
+      #return NA if pdf contains no text (e.g. no OCR)
+      return(NA)
+    }else{
+      text %>% readr::read_lines()#%>% 
       #paste(collapse = " ")
+    }
   }else if(sour=="boj"){
     suppressMessages(xml2::read_html(x,encoding =  "utf8"))%>% 
       rvest::html_nodes(xpath = '//*[@id="contents-skip"]') %>% 
