@@ -43,14 +43,14 @@ get_bis_features<-function(column,countries_cb){
     text<-suppressMessages(readtext::readtext(pdf_link)) %>% 
       dplyr::pull(text) %>% 
       readr::read_lines(.)
-    text<-text[stringr::str_detect(text,"BIS Review",negate = T)]%>% 
-      paste(collapse = " ")
+    text<-text[stringr::str_detect(text,"BIS Review",negate = T)]#%>% 
+      #paste(collapse = " ")
   }else{
     link<-paste0(column[1],".htm")
     text<-html_site %>% rvest::html_nodes(xpath = "//div[@id='cmsContent']") %>% 
       rvest::html_text()%>%
-      readr::read_lines()%>% 
-      paste(collapse = " ")
+      readr::read_lines()#%>% 
+      #paste(collapse = " ")
   }
   
   access_time<-Sys.time()

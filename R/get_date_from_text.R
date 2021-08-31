@@ -16,15 +16,18 @@ get_date_from_text<-function(texts,cb,type,links){
     
     release_date=NA
     
+    text=texts[i]%>% 
+      paste(collapse = " ")
+    
     if(type %in% c("blue","teala","tealb","green1","green2")){
       #if type=T split text on "CONFIDENTIAL"
-      texts[i]=stringr::str_split(texts[i],"CONFIDENTIAL")[[1]][2]
+      texts[i]=stringr::str_split(text,"CONFIDENTIAL")[[1]][2]
     }
       #which is the first pattern found in text
-      first_pattern<-which.min(rowSums(stringr::str_locate(texts[i],unlist(pattern))))
+      first_pattern<-which.min(rowSums(stringr::str_locate(text,unlist(pattern))))
       
       if(length(first_pattern)!=0){
-        found_pattern<-c(stringr::str_extract_all(texts[i],pattern[[first_pattern]],simplify = T))
+        found_pattern<-c(stringr::str_extract_all(text,pattern[[first_pattern]],simplify = T))
         
         if(type=="minutes"){
           if(cb=="boj"&stringr::str_detect(links[i],".htm",negate=T)){
@@ -37,7 +40,7 @@ get_date_from_text<-function(texts,cb,type,links){
           }else if(cb=="fed"){
             release_date=NA
           }else if(cb=="poland"){
-            release_date=stringr::str_extract_all(texts[i],paste0("Publication date: |Date of publication: ",pattern[[first_pattern]]),simplify = T)
+            release_date=stringr::str_extract_all(text,paste0("Publication date: |Date of publication: ",pattern[[first_pattern]]),simplify = T)
             release_date=stringr::str_remove_all(release_date,"Publication date: |Date of publication: ")
             release_date=date_NA(release_date)
           }else if(cb=="ecb"){
@@ -45,7 +48,7 @@ get_date_from_text<-function(texts,cb,type,links){
             release_date=stringr::str_remove(release_date,"mg")
             release_date=as.Date(release_date,"%y%m%d")
           }else if(cb=="iceland"){
-            release_date=stringr::str_extract_all(texts[i],paste0("Published |Published: ",pattern[[first_pattern]]),simplify = T)
+            release_date=stringr::str_extract_all(text,paste0("Published |Published: ",pattern[[first_pattern]]),simplify = T)
             release_date=stringr::str_remove_all(release_date,"Published |Published: ")
             release_date=date_NA(release_date)
             found_pattern<-unique(found_pattern)[-1]
@@ -70,7 +73,7 @@ get_date_from_text<-function(texts,cb,type,links){
           
           date_start<-date_NA(paste0(month," ",days[[1]],", ",year))
           date_end<-date_NA(paste0(month," ",days[[2]],", ",year))
-        }else if (stringr::str_detect(texts[i],"\\band continued on|\\band continuing on")){
+        }else if (stringr::str_detect(text,"\\band continued on|\\band continuing on")){
           #sort dates because of pdf sorting mistakes
           dates<-sort(c(date_NA(found_pattern[1]),date_NA(found_pattern[2])))
           
