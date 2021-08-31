@@ -23,7 +23,7 @@ DETAILS
 \examples{
 \dontrun{
 if(interactive()){
-  x<-scrape_source(list(name="ecb"),c("minutes"))
+  x<-scrape_source(list(name="boe"),c("minutes"))
   x<-scrape_source(list(name="ecb"),c("minutes","pc","economic_outlook","blog"))
   x<-scrape_source(list(name="fed"),c("minutes","pc","red","transkript","agenda",
   "blue","green_sub","teala","tealb","green1","green2","beige"))
