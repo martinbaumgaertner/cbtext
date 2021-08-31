@@ -4,14 +4,12 @@
 \alias{scrape_source}
 \title{scrape_source}
 \usage{
-scrape_source(source, parts, page = 668)
+scrape_source(source, parts)
 }
 \arguments{
 \item{source}{character vector describing central banks}
 
 \item{parts}{character vector describing parts to scrape}
-
-\item{page}{Maximal numbers to scrape bis page, Default: 668}
 }
 \value{
 tibble

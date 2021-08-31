@@ -34,7 +34,8 @@ get_bis_countries<-function(){
   countries_cb[151,"cb"]<-paste("Bank of Spain","Banco de España",sep="|")
   countries_cb[155,"cb"]<-paste("Sveriges Riksbank","Sveriges Risksbank","Sveriges Riskbank","Bank of Sweden","Swedish Central Bank",sep="|")
   countries_cb[156,"cb"]<-paste("Banque nationale suisse","Swiss National Bank",sep="|")
-  countries_cb[163,"cb"]<-paste("Central Bank of Trinidad and Tobago","Central Bank of Trinidad &amp; Tobago",sep="|")
+  countries_cb[163,"cb"]<-paste("Central Bank of Trinidad and Tobago",
+                                "Central Bank of Trinidad & Tobago","Central Bank of Trinidad &amp; Tobago",sep="|")
   countries_cb[178,"cb"]<-paste("Federal Reserve Bank of New York","Federal\rReserve Bank of New York","Fed. Res. Bank of New York",sep="|")
   countries_cb[183,"cb"]<-paste("Board of Governors of the Federal Reserve System","US Fed. Reserve System","US Federal Reserve",
                                 "Federal Reserve System","Board of Governors of the Federal Reserve","US Fed. Res. System","Federal Reserve Board",sep="|")
