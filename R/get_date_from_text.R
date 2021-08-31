@@ -21,7 +21,6 @@ get_date_from_text<-function(texts,cb,type,links){
     release_date=NA
     
     text=texts[i]
-    
     if(type %in% c("blue","teala","tealb","green1","green2")){
       #if type=T split text on "CONFIDENTIAL"
       texts[i]=stringr::str_split(text,"CONFIDENTIAL")[[1]][2]
@@ -37,7 +36,7 @@ get_date_from_text<-function(texts,cb,type,links){
             # use first date in boj non-html minutes as release date
             release_date<-date_NA(unique(found_pattern)[1])
             found_pattern<-unique(found_pattern)[-1]
-          }else if(cb=="boe"&stringr::str_detect(links[i],"\\/(199[0-9]|200[0-9]|201[0-4]\\/)",negate=T)){
+          }else if(cb=="boe"&stringr::str_detect(links[i],"\\/(199[0-9]|200[0-9]|201[0-4]\\/)",negate=F)|stringr::str_detect(links[i],"minutes-january-2015|minutes-february-2015|minutes-march-2015",negate=F)){
             release_date<-date_NA(unique(found_pattern)[1])
             found_pattern<-unique(found_pattern)[-1]
           }else if(cb=="fed"){
@@ -106,7 +105,7 @@ get_date_from_text<-function(texts,cb,type,links){
       release_date=NA
     }
     out$release_date[i]<-release_date
-    
   }
+  
   return(out)
 }
