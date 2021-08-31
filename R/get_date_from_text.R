@@ -14,7 +14,7 @@ get_date_from_text<-function(texts,cb,type,links){
   texts<-texts%>%
     tibble() %>% dplyr::rowwise() %>% 
     dplyr::mutate(text=paste(.,collapse = " ")) %>% 
-    pull(text)
+    dplyr::pull(text)
   
   for(i in 1:length(texts)){
     
