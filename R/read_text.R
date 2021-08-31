@@ -17,7 +17,7 @@ read_text<-function(x,sour){
       #paste(collapse = " ")
   }else {
     clean_html(x)%>% 
-      rvest::html_nodes('i,p,h1,h2,h3') %>%
+      rvest::html_nodes('font:nth-child(1),font:nth-child(3),i,p,h1,h2,h3') %>%
       rvest::html_text()%>%
       stringr::str_replace_all(.,"\u0092","'") %>% 
       stringr::str_remove_all(.,'\"') %>% 
