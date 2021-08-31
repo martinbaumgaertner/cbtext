@@ -11,13 +11,16 @@ get_date_from_text<-function(texts,cb,type,links){
   out<-list(start_date=as.POSIXlt(as.Date(rep(NA,length(texts)))),
               end_date=as.POSIXlt(as.Date(rep(NA,length(texts)))),
             release_date=as.POSIXlt(as.Date(rep(NA,length(texts)))))
+  texts<-texts%>%
+    tibble() %>% dplyr::rowwise() %>% 
+    dplyr::mutate(text=paste(.,collapse = " ")) %>% 
+    pull(text)
   
   for(i in 1:length(texts)){
     
     release_date=NA
     
-    text=texts[i]%>% 
-      paste(collapse = " ")
+    text=texts[i]
     
     if(type %in% c("blue","teala","tealb","green1","green2")){
       #if type=T split text on "CONFIDENTIAL"
@@ -84,15 +87,18 @@ get_date_from_text<-function(texts,cb,type,links){
           date_start<-date_NA(found_pattern[1])
           date_end<-date_NA(found_pattern[1])
         }
+        if(cb=="iceland"&type=="minutes"){
+          #iceland uses 2 days discussing on economic situation and one day on interest. Last day is not found by pattern (Just: %d %B)
+          date_end=date_end+1
+        }else if(cb=="australia"&type=="minutes"){
+          #minutes are released 2 weeks after decision
+          release_date=date_end+14
+        }
+      }else{
+        date_start=NA
+        date_end=NA
+      }
       
-      }
-      if(cb=="iceland"&type=="minutes"){
-        #iceland uses 2 days discussing on economic situation and one day on interest. Last day is not found by pattern (Just: %d %B)
-        date_end=date_end+1
-      }else if(cb=="australia"&type=="minutes"){
-        #minutes are released 2 weeks after decision
-        release_date=date_end+14
-      }
       
     out$start_date[i]<-date_start
     out$end_date[i]<-date_end
