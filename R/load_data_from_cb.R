@@ -6,7 +6,7 @@ load_data_from_cb<-function(links,type,cb){
     #unlist()
   tib$link<-links
   tib$type<-type
-  if(cb=="beo"){
+  if(cb=="boe"){
     tib$cb<-"Bank of England"
   }else if(cb=="ecb"){
     tib$cb<-"European Central Bank"
