@@ -2,11 +2,10 @@ get_date_from_text<-function(texts,cb,type,links){
   Sys.setlocale("LC_ALL","English")
   date_NA <- function(x) tryCatch(as.Date(x, tryFormats = c("%d/%m/%y","%m/%d/%y", "%Y/%m/%d",
                                                             "%d %B %Y","%d %B, %Y","%B %d, %Y","%dth %B %Y","%d.%m.%y")), error = function(e) NA)
-  pattern<-list("\\d{1,2}(th)?(-|–| and )?(\\d{1,2})?\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)(,)?\\s+\\d{4}.?",
+  pattern<-list("\\d{1,2}(th)?(-|–| and | AND )?(\\d{1,2})?\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?|JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?)(,)?\\s+\\d{4}.?",
                 "(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2}(-|–| and )?(\\d{1,2})?(,)?\\s+\\d{4}",
                 "\\d{1,2}\\/\\d{1,2}\\/\\d{1,4}",
-                "\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}",
-                "\\d{1,2}(th)?(-|–| and )?(\\d{1,2})?\\s+(JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?)(,)?\\s+\\d{4}.?")
+                "\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}")
   #output is a list including the start and end date
   out<-list(start_date=as.POSIXlt(as.Date(rep(NA,length(texts)))),
               end_date=as.POSIXlt(as.Date(rep(NA,length(texts)))),
@@ -23,7 +22,7 @@ get_date_from_text<-function(texts,cb,type,links){
     text=texts[i]
     if(type %in% c("blue","teala","tealb","green1","green2")){
       #if type=T split text on "CONFIDENTIAL"
-      texts[i]=stringr::str_split(text,"CONFIDENTIAL")[[1]][2]
+      text=stringr::str_split(text,"CONFIDENTIAL")[[1]][2]
     }
       #which is the first pattern found in text
       first_pattern<-which.min(rowSums(stringr::str_locate(text,unlist(pattern))))
@@ -68,10 +67,10 @@ get_date_from_text<-function(texts,cb,type,links){
           found_pattern[1]=c("28 February 2009")
         }
         
-        if(stringr::str_detect(found_pattern[1],"(-|–|and)")){
+        if(stringr::str_detect(found_pattern[1],"(-|–|and|AND)")){
           year=stringr::str_extract(found_pattern[1],"\\d{4}")
-          month=stringr::str_extract(found_pattern[1],"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)")
-          days=c(stringr::str_split(stringr::str_extract(found_pattern[1],"\\d{1,2}(-|–| and )\\d{1,2}"),"(-|–| and )",simplify = T))
+          month=stringr::str_extract(found_pattern[1],"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?|JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?)")
+          days=c(stringr::str_split(stringr::str_extract(found_pattern[1],"\\d{1,2}(-|–| and | AND )\\d{1,2}"),"(-|–| and | AND )",simplify = T))
           
           date_start<-date_NA(paste0(month," ",days[[1]],", ",year))
           date_end<-date_NA(paste0(month," ",days[[2]],", ",year))
