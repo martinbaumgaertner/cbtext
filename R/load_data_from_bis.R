@@ -59,7 +59,7 @@ get_bis_features<-function(column,countries_cb){
   
   #fill gaps
   if(is.na(start_date)){
-    dates<-get_date_from_text(text,"speech")
+    dates<-get_date_from_text(text,"bis","speech")
     start_date<-dates$start_date
     end_date<-dates$end_date
   }
@@ -73,6 +73,7 @@ get_bis_features<-function(column,countries_cb){
   
   return(dplyr::tibble(title,speaker,start_date,end_date,release_date,position,event,cb,country,type,text,link,access_time,language))
 }
+
 search_cb<-function(strings,aux_string,countrys){
   dat<-data.frame(country=rep(NA,length(strings)),cb=rep(NA,length(strings)))
   for (i in 1:length(strings)){
@@ -89,6 +90,9 @@ search_cb<-function(strings,aux_string,countrys){
       dat_temp<-countrys %>% 
         dplyr::filter(stringr::str_detect(strings[i],countrys %>% 
                                             dplyr::pull(cb)))
+      if(nrow(dat_temp)>1){
+        dat_temp=dat_temp[1,]
+      }
     }
     
     #if speaker position gives no central bank or country use total description
