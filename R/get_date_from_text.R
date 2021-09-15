@@ -1,8 +1,8 @@
 get_date_from_text<-function(texts,cb,type,links){
   Sys.setlocale("LC_ALL","English")
   date_NA <- function(x) tryCatch(as.Date(x, tryFormats = c("%d/%m/%y","%m/%d/%y", "%Y/%m/%d",
-                                                            "%d %B %Y","%d %B, %Y","%B %d, %Y","%dth %B %Y","%d.%m.%y")), error = function(e) NA)
-  pattern<-list("\\d{1,2}(th)?(-|–| and | AND )?(\\d{1,2})?\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?|JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?)(,)?\\s+(?:\\d{4}|\\d{2}).?",
+                                                            "%d %B %Y","%d %B, %Y","%d %B. %Y","%B %d, %Y","%dth %B %Y","%d.%m.%y")), error = function(e) NA)
+  pattern<-list("\\d{1,2}(th)?(-|–| and | AND )?(\\d{1,2})?\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?|JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?).?(,)?\\s+(?:\\d{4}|\\d{2}).?",
                 "(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2}(-|–| and )?(\\d{1,2})?(,)?\\s+\\d{4}",
                 "\\d{1,2}\\/\\d{1,2}\\/\\d{1,4}",
                 "\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}")
@@ -20,6 +20,10 @@ get_date_from_text<-function(texts,cb,type,links){
     release_date=NA
     
     text=texts[i]
+    
+    #clean non english month abre
+    text=str_replace(text,"Sept\\.","Sep")
+    
     if(type %in% c("blue","teala","tealb","green1","green2")){
       #if type=T split text on "CONFIDENTIAL"
       text=stringr::str_split(text,"CONFIDENTIAL")[[1]][2]
@@ -63,13 +67,13 @@ get_date_from_text<-function(texts,cb,type,links){
         }
         
         #correct encoding mistake
-        if(found_pattern[1]==c("29 February 2009")){
+        if(found_pattern[1]%in%c("29 February 2009","29 February 2009.")){
           found_pattern[1]=c("28 February 2009")
         }
         
         if(stringr::str_detect(found_pattern[1],"(-|–|and|AND)")){
           year=stringr::str_extract(found_pattern[1],"\\d{4}")
-          month=stringr::str_extract(found_pattern[1],"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?|JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?)")
+          month=stringr::str_extract(found_pattern[1],"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(t)?(ember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?|JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?)")
           days=c(stringr::str_split(stringr::str_extract(found_pattern[1],"\\d{1,2}(-|–| and | AND )\\d{1,2}"),"(-|–| and | AND )",simplify = T))
           
           date_start<-date_NA(paste0(month," ",days[[1]],", ",year))
@@ -98,8 +102,15 @@ get_date_from_text<-function(texts,cb,type,links){
       }
       
     if(cb=="bis"){
-      date_start<-c(na.omit(date_start))
-      date_end<-c(na.omit(date_end))
+      if(length(date_start)>1){
+        date_start<-c(na.omit(date_start))
+      }
+      if(length(date_end)>1){
+        date_end<-c(na.omit(date_end))
+      }
+      if(length(release_date)>1){
+        release_date<-c(na.omit(release_date))
+      }
     }
       
     date_start<-fix_twodigit_year(date_start)
@@ -127,11 +138,11 @@ fix_twodigit_year<-function(date_in){
       #if year is higher than current year add 1900
       date_out<-as.Date(date_in) + lubridate::years(1900)
     }
-  }else{
-    if(lubridate::year(date_in)>lubridate::year(Sys.time())){
+  }else if(lubridate::year(date_in)>lubridate::year(Sys.time())){
       date_out=as.Date(date_in) - lubridate::years(100)
-    }
+  }else{
+    date_out=date_in
   }
   
-  return(date)
+  return(date_out)
 }
