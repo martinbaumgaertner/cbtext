@@ -2,7 +2,7 @@ get_date_from_text<-function(texts,cb,type,links){
   Sys.setlocale("LC_ALL","English")
   date_NA <- function(x) tryCatch(as.Date(x, tryFormats = c("%d/%m/%y","%m/%d/%y", "%Y/%m/%d",
                                                             "%d %B %Y","%d %B, %Y","%B %d, %Y","%dth %B %Y","%d.%m.%y")), error = function(e) NA)
-  pattern<-list("\\d{1,2}(th)?(-|–| and | AND )?(\\d{1,2})?\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?|JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?)(,)?\\s+\\d{4}.?",
+  pattern<-list("\\d{1,2}(th)?(-|–| and | AND )?(\\d{1,2})?\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?|JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?)(,)?\\s+(?:\\d{4}|\\d{2}).?",
                 "(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2}(-|–| and )?(\\d{1,2})?(,)?\\s+\\d{4}",
                 "\\d{1,2}\\/\\d{1,2}\\/\\d{1,4}",
                 "\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}")
@@ -97,14 +97,41 @@ get_date_from_text<-function(texts,cb,type,links){
         date_end=NA
       }
       
+    if(cb=="bis"){
+      date_start<-c(na.omit(date_start))
+      date_end<-c(na.omit(date_end))
+    }
       
+    date_start<-fix_twodigit_year(date_start)
+    date_end<-fix_twodigit_year(date_end)
     out$start_date[i]<-date_start
     out$end_date[i]<-date_end
-    if(is.null(release_date)){
-      release_date=NA
-    }
+    
+    release_date<-fix_twodigit_year(release_date)
     out$release_date[i]<-release_date
   }
   
   return(out)
+}
+
+fix_twodigit_year<-function(date_in){
+  if(is.na(date_in)){
+    date_out<-NA
+    return(date_out)
+  }
+  if(lubridate::year(date_in)<=1000){
+    if(lubridate::year(date_in)<=lubridate::year(Sys.time())-2000){
+      #if year is NOT higher than current year add 2000
+      date_out<-as.Date(date_in) + lubridate::years(2000)
+    }else if(lubridate::year(date_in)>lubridate::year(Sys.time())-2000){
+      #if year is higher than current year add 1900
+      date_out<-as.Date(date_in) + lubridate::years(1900)
+    }
+  }else{
+    if(lubridate::year(date_in)>lubridate::year(Sys.time())){
+      date_out=as.Date(date_in) - lubridate::years(100)
+    }
+  }
+  
+  return(date)
 }
