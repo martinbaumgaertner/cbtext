@@ -24,7 +24,7 @@ get_bis_features<-function(column,countries_cb){
     rvest::html_text()%>% 
     stringr::str_remove_all("\n|\t")
   
-  dates<-get_date_from_text(description,"speech")
+  dates<-get_date_from_text(description,"bis",type="speeches")
   start_date<-dates$start_date
   end_date<-dates$end_date
   
