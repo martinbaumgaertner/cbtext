@@ -43,8 +43,10 @@ get_bis_features<-function(column,countries_cb){
     text<-suppressMessages(readtext::readtext(pdf_link)) %>% 
       dplyr::pull(text) %>% 
       readr::read_lines(.)
-    text<-text[stringr::str_detect(text,"BIS Review",negate = T)]#%>% 
+    text<-text[stringr::str_detect(text,"BIS Review",negate = T)] #%>% 
       #paste(collapse = " ")
+    
+    text<-list(tibble(text))
   }else{
     link<-paste0(column[1],".htm")
     text<-html_site %>% rvest::html_nodes(xpath = "//div[@id='cmsContent']") %>% 
@@ -54,12 +56,26 @@ get_bis_features<-function(column,countries_cb){
   }
   
   access_time<-Sys.time()
-  language<-cld3::detect_language(text)
+  language<-names(which.max(table(cld3::detect_language(text[[1]]))))
   type="speech"
   
   #fill gaps
+  
+  # if(is.na(start_date)){
+      #if no date can be found in description use information from bis site
+  #   Sys.setlocale("LC_ALL","English")
+  #   date_NA <- function(x) tryCatch(as.Date(x, tryFormats = c("%d/%m/%y","%m/%d/%y", "%Y/%m/%d",
+  #                                                             "%d %B %Y","%d %B, %Y","%d %B. %Y","%B %d, %Y","%dth %B %Y","%d.%m.%y")), error = function(e) NA)
+  #   dates<-html_site%>% 
+  #     rvest::html_element(".date")%>% 
+  #     rvest::html_text() %>%
+  #     date_NA()
+  #   start_date<-dates
+  #   end_date<-dates
+  # }
+  
   if(is.na(start_date)){
-    dates<-get_date_from_text(text,"bis","speech")
+    dates<-get_date_from_text(text[[1]],"bis","speech")
     start_date<-dates$start_date
     end_date<-dates$end_date
   }
@@ -99,7 +115,8 @@ search_cb<-function(strings,aux_string,countrys){
     if(nrow(dat_temp)==0){
       dat_temp<-countrys %>% 
         dplyr::filter(stringr::str_detect(aux_string[i],countrys %>% 
-                                            dplyr::pull(cb)))
+                                            dplyr::pull(cb))) %>% 
+        .[1,]
     }
     if(nrow(dat_temp)==0){
       print(aux_string[i])
