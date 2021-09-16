@@ -22,7 +22,7 @@ get_date_from_text<-function(texts,cb,type,links){
     text=texts[i]
     
     #clean non english month abre
-    text=str_replace(text,"Sept\\.","Sep")
+    text=stringr::str_replace(text,"Sept\\.","Sep")
     
     if(type %in% c("blue","teala","tealb","green1","green2")){
       #if type=T split text on "CONFIDENTIAL"
