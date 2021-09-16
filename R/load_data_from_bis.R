@@ -43,8 +43,8 @@ get_bis_features<-function(column,countries_cb){
     text<-suppressMessages(readtext::readtext(pdf_link)) %>% 
       dplyr::pull(text) %>% 
       readr::read_lines(.)
-    text<-text[stringr::str_detect(text,"BIS Review",negate = T)] #%>% 
-      #paste(collapse = " ")
+    text<-text[stringr::str_detect(text,"BIS Review",negate = T)]
+    text<-text[stringr::str_detect(text,"BIS central bankers’ speeches",negate = T)]
     
     text<-list(dplyr::tibble(text))
   }else{
@@ -76,7 +76,7 @@ get_bis_features<-function(column,countries_cb){
   # }
   
   if(is.na(start_date)){
-    dates<-get_date_from_text(text[[1]],"bis","speech")
+    dates<-get_date_from_text(text[[1]]$text %>% paste(.,collapse = " "),"bis","speech")
     start_date<-dates$start_date
     end_date<-dates$end_date
   }
