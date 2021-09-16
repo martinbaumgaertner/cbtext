@@ -14,7 +14,7 @@ get_bis_countries<-function(){
   countries_cb[37,"cb"]<-paste("People's Bank of China")
   countries_cb[38,"cb"]<-paste("Central Bank of Colombia","Bank of the Republic",sep="|")
   countries_cb[42,"cb"]<-paste("Croatian National Bank","Croation National Bank",sep="|")
-  countries_cb[44,"cb"]<-paste("Central Bank of Curaçao and Sint Maarten","Central Bank of Curacao and Sint Maarten",sep="|")
+  countries_cb[44,"cb"]<-paste("Central Bank of Curaçao and Sint Maarten","Central Bank of Curacao and Sint Maarten","Bank van de Nederlandse Antillen",sep="|")
   countries_cb[47,"cb"]<-paste("Danmarks Nationalbank","National Bank of Denmark","Danmarks National Bank",sep="|")
   countries_cb[56,"cb"]<-paste("European Central Bank","ECB","Mario Draghi","European Central, Bank","Europ. Central Bank",sep="|")
   countries_cb[59,"cb"]<-paste("Bank of France","Banque de France","BANK OF FRANCE",sep="|")
