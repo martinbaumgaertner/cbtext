@@ -37,4 +37,3 @@ load_data_from_cb<-function(links,type,cb){
   tib$access_time<-Sys.time()
   return(tib)
 }
-
