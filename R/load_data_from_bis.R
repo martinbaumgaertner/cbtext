@@ -46,13 +46,14 @@ get_bis_features<-function(column,countries_cb){
     text<-text[stringr::str_detect(text,"BIS Review",negate = T)] #%>% 
       #paste(collapse = " ")
     
-    text<-list(tibble(text))
+    text<-list(dplyr::tibble(text))
   }else{
     link<-paste0(column[1],".htm")
     text<-html_site %>% rvest::html_nodes(xpath = "//div[@id='cmsContent']") %>% 
       rvest::html_text()%>%
       readr::read_lines()#%>% 
       #paste(collapse = " ")
+    text<-list(dplyr::tibble(text))
   }
   
   access_time<-Sys.time()
@@ -206,4 +207,3 @@ load_data_from_bis<-function(links,countries_cb){
   
   return(bis_data)
 }
-
