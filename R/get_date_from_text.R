@@ -9,15 +9,15 @@ get_date_from_text<-function(texts,cb,type,links){
                 "\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}")
   
   #output is a list including the start and end date
-  out<-list(start_date=as.POSIXlt(as.Date(rep(NA,length(texts)))),
-              end_date=as.POSIXlt(as.Date(rep(NA,length(texts)))),
-            release_date=as.POSIXlt(as.Date(rep(NA,length(texts)))))
+  out<-list(start_date=as.POSIXlt(as.Date(rep(NA,nrow(texts)))),
+              end_date=as.POSIXlt(as.Date(rep(NA,nrow(texts)))),
+            release_date=as.POSIXlt(as.Date(rep(NA,nrow(texts)))))
   texts<-texts%>%
     #dplyr::tibble() %>% 
     mutate(text = map_chr(text, ~ paste(unlist(.), collapse = " \b "))) %>% 
     dplyr::pull(text)
   
-  for(i in 1:length(texts)){
+  for(i in 1:nrow(texts)){
     
     release_date=NA
     
