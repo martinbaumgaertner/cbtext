@@ -39,7 +39,6 @@ get_date_from_text<-function(texts,cb,type,links){
       
       if(length(first_pattern)!=0){
         found_pattern<-c(stringr::str_extract_all(text,pattern[[first_pattern]],simplify = T))
-        print(found_pattern)
         if(type=="minutes"){
           if(cb=="boj"&stringr::str_detect(links[i],".htm",negate=T)){
             # use first date in boj non-html minutes as release date
