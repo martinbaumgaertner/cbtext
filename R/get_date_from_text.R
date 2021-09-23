@@ -47,7 +47,7 @@ get_date_from_text<-function(texts,cb,type,links){
           }else if(cb=="fed"){
             release_date=NA
           }else if(cb=="poland"){
-            release_date=stringr::str_extract_all(text,paste0("Publication date: |Date of publication: ",pattern[[first_pattern]]),simplify = T)
+            release_date=stringr::str_extract_all(text,paste0("(Publication date: |Date of publication: )",pattern[[first_pattern]]),simplify = T)
             release_date=stringr::str_remove_all(release_date,"Publication date: |Date of publication: ")
             release_date=date_NA(release_date)
           }else if(cb=="ecb"){
@@ -55,7 +55,7 @@ get_date_from_text<-function(texts,cb,type,links){
             release_date=stringr::str_remove(release_date,"mg")
             release_date=as.Date(release_date,"%y%m%d")
           }else if(cb=="iceland"){
-            release_date=stringr::str_extract_all(text,paste0(paste0("Published ",pattern[[first_pattern]]),"|",paste0("Published: ",pattern[[first_pattern]])),simplify = T)
+            release_date=stringr::str_extract_all(text,paste0("(Published |Published: )",pattern[[first_pattern]]),simplify = T)
             release_date=stringr::str_remove_all(release_date,"Published |Published: ")
             release_date=date_NA(release_date)
             found_pattern<-unique(found_pattern)[-1]
