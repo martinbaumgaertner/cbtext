@@ -13,8 +13,8 @@ get_date_from_text<-function(texts,cb,type,links){
               end_date=as.POSIXlt(as.Date(rep(NA,length(texts)))),
             release_date=as.POSIXlt(as.Date(rep(NA,length(texts)))))
   texts<-texts%>%
-    dplyr::tibble() %>% dplyr::rowwise() %>% 
-    dplyr::mutate(text=paste(.,collapse = " ")) %>% 
+    dplyr::tibble() %>% 
+    mutate(text = map_chr(text, ~ paste(unlist(.), collapse = " \b "))) %>% 
     dplyr::pull(text)
   
   for(i in 1:length(texts)){
