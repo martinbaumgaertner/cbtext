@@ -3,10 +3,14 @@ get_date_from_text<-function(texts,cb,type,links){
   date_NA <- function(x) tryCatch(as.Date(x, tryFormats = c("%d/%m/%y","%m/%d/%y", "%Y/%m/%d",
                                                             "%d %B %Y","%d %B, %Y","%d %B. %Y","%B %d, %Y","%B %d %Y","%dth %B %Y","%d.%m.%y",
                                                             "%B %dth, %Y")), error = function(e) NA)
-  pattern<-list("\\d{1,2}(th)?(-|–| and | AND )?(\\d{1,2})?\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?|JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?).?(,)?\\s+(?:\\d{4}|\\d{2}).?",
-                "(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2}(th)?(-|–| and )?(\\d{1,2})?(,)?\\s+\\d{4}",
+  pattern<-list("\\d{1,2}(th)?(-|–| - | and | AND )?(\\d{1,2})?( of)?\\s+(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?|JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?).?(,)?\\s+(?:\\d{4}|\\d{2}).?",
+                "(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\\s+\\d{1,2}(th)?(-|–| - | and )?(\\d{1,2})?(,)?\\s+\\d{4}",
                 "\\d{1,2}\\/\\d{1,2}\\/\\d{1,4}",
                 "\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}")
+  
+  string="31 October and 1 November 2011,"
+  
+  str_extract(string,pattern[[1]])
   
   #output is a list including the start and end date
   out<-list(start_date=as.POSIXlt(as.Date(rep(NA,nrow(texts)))),
@@ -14,10 +18,10 @@ get_date_from_text<-function(texts,cb,type,links){
             release_date=as.POSIXlt(as.Date(rep(NA,nrow(texts)))))
   texts<-texts%>%
     #dplyr::tibble() %>% 
-    mutate(text = map_chr(text, ~ paste(unlist(.), collapse = " \b "))) %>% 
+    mutate(text = map_chr(text, ~ paste(unlist(.), collapse = " "))) %>% 
     dplyr::pull(text)
   
-  for(i in 1:nrow(texts)){
+  for(i in 1:length(texts)){
     
     release_date=NA
     
@@ -35,7 +39,7 @@ get_date_from_text<-function(texts,cb,type,links){
       
       if(length(first_pattern)!=0){
         found_pattern<-c(stringr::str_extract_all(text,pattern[[first_pattern]],simplify = T))
-        
+        print(found_pattern)
         if(type=="minutes"){
           if(cb=="boj"&stringr::str_detect(links[i],".htm",negate=T)){
             # use first date in boj non-html minutes as release date
@@ -73,10 +77,10 @@ get_date_from_text<-function(texts,cb,type,links){
           found_pattern[1]=c("28 February 2009")
         }
         
-        if(stringr::str_detect(found_pattern[1],"(-|–|and|AND)")){
+        if(stringr::str_detect(found_pattern[1],"(-|–| - |and|AND)")){
           year=stringr::str_extract(found_pattern[1],"\\d{4}")
           month=stringr::str_extract(found_pattern[1],"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(t)?(ember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?|JAN(UARY)?|FEB(RUARY)?|MAR(CH)?|APR(IL)?|MAY|JUN(E)?|JUL(Y)?|AUG(UST)?|SEP(TEMBER)?|OCT(OBER)?|NOV(EMBER)?|DEC(EMBER)?)")
-          days=c(stringr::str_split(stringr::str_extract(found_pattern[1],"\\d{1,2}(-|–| and | AND )\\d{1,2}"),"(-|–| and | AND )",simplify = T))
+          days=c(stringr::str_split(stringr::str_extract(found_pattern[1],"\\d{1,2}(-|–| - | and | AND )\\d{1,2}"),"(-|–| - | and | AND )",simplify = T))
           
           date_start<-date_NA(paste0(month," ",days[[1]],", ",year))
           date_end<-date_NA(paste0(month," ",days[[2]],", ",year))
