@@ -203,7 +203,11 @@ load_data_from_bis<-function(links,countries_cb){
   }
   close(pb)
   bis_data<-bis_data %>% 
-    dplyr::bind_rows()
+    dplyr::bind_rows()%>% 
+    dplyr::rowwise() %>% 
+    dplyr::mutate(cb=head(unlist(stringr::str_split(cb,
+                                    "\\|")),1))%>% 
+    ungroup()
   
   return(bis_data)
 }
