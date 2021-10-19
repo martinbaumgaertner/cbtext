@@ -33,10 +33,10 @@ get_bis_features<-function(column,countries_cb){
     rvest::html_text() %>% 
     as.Date(c("%d %B %Y"))
   
-  position<-extract_position(description)
+  speaker_position<-extract_position(description)
   event<-extract_event(description)
-  cb<-search_cb(position,description,countries_cb)$cb
-  country<-search_cb(position,description,countries_cb)$country
+  cb<-search_cb(speaker_position,description,countries_cb)$cb
+  country<-search_cb(speaker_position,description,countries_cb)$country
   
   if(!is.na(column[2])){
     link<-pdf_link
@@ -46,14 +46,14 @@ get_bis_features<-function(column,countries_cb){
     text<-text[stringr::str_detect(text,"BIS Review",negate = T)]
     text<-text[stringr::str_detect(text,"BIS central bankers’ speeches",negate = T)]
     
-    text<-list(dplyr::tibble(text))
+    text<-list(text)
   }else{
     link<-paste0(column[1],".htm")
     text<-html_site %>% rvest::html_nodes(xpath = "//div[@id='cmsContent']") %>% 
       rvest::html_text()%>%
       readr::read_lines()#%>% 
       #paste(collapse = " ")
-    text<-list(dplyr::tibble(text))
+    text<-list(text)
   }
   
   access_time<-Sys.time()
@@ -88,7 +88,7 @@ get_bis_features<-function(column,countries_cb){
     speaker<-sapply( speaker, utils::head, 1 )
   }
   
-  return(dplyr::tibble(title,speaker,start_date,end_date,release_date,position,event,cb,country,type,text,link,access_time,language))
+  return(dplyr::tibble(title,speaker,start_date,end_date,release_date,speaker_position,event,cb,country,type,text,link,access_time,language))
 }
 
 search_cb<-function(strings,aux_string,countrys){
