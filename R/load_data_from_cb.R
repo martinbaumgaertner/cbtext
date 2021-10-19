@@ -8,20 +8,28 @@ load_data_from_cb<-function(links,type,cb){
   tib$type<-type
   if(cb=="boe"){
     tib$cb<-"Bank of England"
+    tib$country<-"United Kingdom"
   }else if(cb=="ecb"){
     tib$cb<-"European Central Bank"
+    tib$country<-"Euro area"
   }else if(cb=="fed"){
     tib$cb<-"US Federal Reserve"
+    tib$country<-"United States"
   }else if(cb=="boj"){
     tib$cb<-"Bank of Japan"
+    tib$country<-"Japan"
   }else if(cb=="poland"){
     tib$cb<-"Narodowy Bank Polski"
+    tib$country<-"Poland"
   }else if(cb=="iceland"){
     tib$cb<-"Central Bank of Iceland"
+    tib$country<-"Iceland"
   }else if(cb=="australia"){
     tib$cb<-"Reserve Bank of Australia"
+    tib$country<-"Australia"
   }else if(cb=="riksbank"){
     tib$cb<-"Sveriges Riksbank"
+    tib$country<-"Sweden"
   }else{
     tib$cb<-cb
   }
