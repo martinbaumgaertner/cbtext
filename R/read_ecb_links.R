@@ -55,9 +55,10 @@ xml2::read_html(paste0("https://www.ecb.europa.eu/press/inter/date/",x,"/html/in
 
 xml2::read_html(paste0("https://www.ecb.europa.eu/press/inter/date/",x,"/html/index_include.en.html")) %>%
   rvest::html_nodes(".date")%>% 
-  html_text()
+  rvest::html_text()
 
 xml2::read_html(paste0("https://www.ecb.europa.eu/press/inter/date/",x,"/html/index_include.en.html")) %>%
   rvest::html_nodes(".title")%>% 
-  html_text() %>% 
-  head(unlist(str_split(.,":",simplify = T)))
+  rvest::html_text() %>% 
+  stringr::str_split(.,":",simplify = T) %>% 
+  head()
