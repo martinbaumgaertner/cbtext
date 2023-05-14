@@ -32,7 +32,7 @@ and release dates, depending on the context and type of text.
 }
 \examples{
 \dontrun{
-texts <- tibble(text = c("The minutes of the meeting held on January 15, 2022 are available now.",
+texts <- tibble::tibble(text = c("The minutes of the meeting held on January 15, 2022 are available now.",
            "Please refer to the report published on 01/20/22 for more information."))
 cb <- "boj"
 type <- "minutes"

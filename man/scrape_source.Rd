@@ -28,7 +28,7 @@ if(interactive()){
   x<-scrape_source(list(name="fed"),c("minutes","pc","red","transkript","agenda",
   "blue","green_sub","teala","tealb","green1","green2","beige"))
   x<-scrape_source(list(name="boj"),c("minutes","economic_report","release","outlook_report"))
-  x<-scrape_source(list(name="poland"),c("minutes"))
+  x<-scrape_source(list(name="poland"),c("minutes","inflation_report","release"))
   x<-scrape_source(list(name="iceland"),c("minutes"))
   x<-scrape_source(list(name="australia"),c("minutes"))
   x<-scrape_source(list(name="riksbank"),c("minutes","economicreview","mpreports"))
