@@ -1,7 +1,7 @@
 get_bis_features <- function(column, countries_cb) {
   
   # Check if column is a Tibble with 3 columns
-  if (!is_tibble(column) || ncol(column) != 3) {
+  if (!tibble::is_tibble(column) || ncol(column) != 3) {
     stop("Invalid column input. It should be a Tibble with 3 columns.")
   }
   
@@ -28,7 +28,7 @@ get_bis_features <- function(column, countries_cb) {
   release_date <- extract_element(html_site, ".date") %>% as.Date(c("%d %B %Y"))
   
   # Extract dates
-  dates <- get_date_from_text(tibble(texts = description), "bis", type = "speeches")
+  dates <- get_date_from_text(tibble(text = description), "bis", type = "speeches")
   start_date <- dates$start_date
   end_date <- dates$end_date
   
