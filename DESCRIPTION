@@ -12,7 +12,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 Suggests: 
     testthat (>= 3.0.0),
     covr
@@ -21,19 +21,18 @@ Imports:
     magrittr,
     dplyr,
     rvest,
-    data.table,
     pdftools,
     future.apply,
     lubridate,
     cld3,
     future,
-    RCurl,
     readr,
     readtext,
     spacyr,
     stringr,
-    tidyRSS,
     vctrs,
     xml2,
-    stats,
+    purrr,
+    tibble,
+    tidyr,
     utils
