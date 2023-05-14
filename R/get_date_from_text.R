@@ -1,5 +1,39 @@
+#' Extract Dates from Text
+#'
+#' This function extracts dates from text using specified patterns and formats.
+#'
+#' @param texts A tibble containing the text from which dates will be extracted. The tibble must have a column named "text" containing the text data.
+#' @param cb A character string indicating the source or context of the text (e.g., "boj", "fed").
+#' @param type A character string indicating the type of text (e.g., "minutes", "teala").
+#' @param links A character vector containing the links associated with the text.
+#'
+#' @return A list with three elements:
+#'   \item{start_date}{A vector of start dates extracted from the text.}
+#'   \item{end_date}{A vector of end dates extracted from the text.}
+#'   \item{release_date}{A vector of release dates extracted from the text.}
+#'
+#' @details The function searches for specific date patterns in the provided text using regular expressions.
+#'   It handles different formats and variations of dates commonly found in texts, such as "1st January 2022",
+#'   "Jan 1, 2022", "01/01/22", etc. The extracted dates are then returned as start dates, end dates,
+#'   and release dates, depending on the context and type of text.
+#'
+#' @examples
+#' \dontrun{
+#' texts <- tibble::tibble(text = c("The minutes of the meeting held on January 15, 2022 are available now.",
+#'            "Please refer to the report published on 01/20/22 for more information."))
+#' cb <- "boj"
+#' type <- "minutes"
+#' links <- c("https://www.example.com/minutes_2022.html", "https://www.example.com/report_2022.html")
+#' get_date_from_text(texts, cb, type, links)
+#' }
+#'
+#' @importFrom stringr str_replace str_detect str_extract_all str_remove_all
+#' @importFrom lubridate year
+#' @importFrom dplyr tibble pull mutate
+#'
+#' @export
 get_date_from_text<-function(texts,cb,type,links){
-  Sys.setlocale("LC_ALL","English")
+  Sys.setlocale("LC_ALL","en_US.UTF-8")
   date_NA <- function(x) tryCatch(as.Date(x, tryFormats = c("%d/%m/%y","%m/%d/%y", "%Y/%m/%d",
                                                             "%d %B %Y","%d %B, %Y","%d %B. %Y","%B %d, %Y","%B %d %Y","%dth %B %Y","%d.%m.%y",
                                                             "%B %dth, %Y")), error = function(e) NA)
@@ -8,17 +42,14 @@ get_date_from_text<-function(texts,cb,type,links){
                 "\\d{1,2}\\/\\d{1,2}\\/\\d{1,4}",
                 "\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}")
   
-  string="31 October and 1 November 2011,"
-  
-  str_extract(string,pattern[[1]])
-  
   #output is a list including the start and end date
-  out<-list(start_date=as.POSIXlt(as.Date(rep(NA,nrow(texts)))),
-              end_date=as.POSIXlt(as.Date(rep(NA,nrow(texts)))),
-            release_date=as.POSIXlt(as.Date(rep(NA,nrow(texts)))))
+  init <- rep(NA,nrow(texts))
+  out<-list(start_date=as.POSIXlt(as.Date(init)),
+              end_date=as.POSIXlt(as.Date(init)),
+            release_date=as.POSIXlt(as.Date(init)))
   texts<-texts%>%
     #dplyr::tibble() %>% 
-    mutate(text = map_chr(text, ~ paste(unlist(.), collapse = " "))) %>% 
+    dplyr::mutate(text = purrr::map_chr(text, ~ paste(unlist(.), collapse = " "))) %>% 
     dplyr::pull(text)
   
   for(i in 1:length(texts)){
