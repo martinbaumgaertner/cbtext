@@ -1,84 +1,70 @@
-get_bis_features<-function(column,countries_cb){
+get_bis_features <- function(column, countries_cb) {
   
-  html_site<-xml2::read_html(paste0(column[1],".htm"))
-  if(!is.na(column[2])){
-    pdf_link<-paste0(column[1],".pdf")
+  # Check if column is a Tibble with 3 columns
+  if (!is_tibble(column) || ncol(column) != 3) {
+    stop("Invalid column input. It should be a Tibble with 3 columns.")
   }
   
-  title<-html_site %>% 
-    rvest::html_element("h1")%>% 
-    rvest::html_text()
-  
-  if(stringr::str_detect(title,":")){
-    title<-title %>% 
-      stringr::str_split(pattern=":",simplify = T) %>% 
-      .[,2]
+  # Check if column elements are of character type
+  if (!is.character(column[[1]]) || !is.character(column[[2]]) || !is.character(column[[3]])) {
+    stop("Invalid column input. Elements should be of character type.")
   }
   
-  speaker<-html_site%>%
-    rvest::html_element(".authorlnk") %>% 
-    rvest::html_text()
+  # Define site URL
+  url_base <- column[1]
+  html_site <- xml2::read_html(paste0(url_base, ".htm"))
   
-  description<-html_site %>% 
-    rvest::html_element("#extratitle-div") %>% 
-    rvest::html_text()%>% 
-    stringr::str_remove_all("\n|\t")
+  # Get PDF link if it exists
+  pdf_link <- if(!is.na(column[2])) paste0(url_base, ".pdf") else NA
   
-  dates<-get_date_from_text(description,"bis",type="speeches")
-  start_date<-dates$start_date
-  end_date<-dates$end_date
+  # Extract elements
+  extract_element <- function(html, css) {
+    html %>% rvest::html_element(css) %>% rvest::html_text() %>% stringr::str_remove_all("\n|\t")
+  }
   
-  release_date<-html_site %>% 
-    rvest::html_element(".date") %>% 
-    rvest::html_text() %>% 
-    as.Date(c("%d %B %Y"))
+  title <- extract_element(html_site, "h1")
+  speaker <- extract_element(html_site, ".authorlnk")
+  description <- extract_element(html_site, "#extratitle-div")
+  release_date <- extract_element(html_site, ".date") %>% as.Date(c("%d %B %Y"))
   
-  speaker_position<-extract_position(description)
-  event<-extract_event(description)
-  cb<-search_cb(speaker_position,description,countries_cb)$cb
-  country<-search_cb(speaker_position,description,countries_cb)$country
+  # Extract dates
+  dates <- get_date_from_text(tibble(texts = description), "bis", type = "speeches")
+  start_date <- dates$start_date
+  end_date <- dates$end_date
   
-  if(!is.na(column[2])){
-    link<-pdf_link
-    text<-suppressMessages(readtext::readtext(pdf_link)) %>% 
+  # Extract speaker position, event, cb, country
+  speaker_position <- extract_position(description)
+  event <- extract_event(description)
+  cb_country <- search_cb(speaker_position, description, countries_cb)
+  cb <- cb_country$cb
+  country <- cb_country$country
+  
+  # Extract text and link
+  if (!is.na(pdf_link)) {
+    link <- pdf_link
+    text <- suppressMessages(readtext::readtext(pdf_link)) %>% 
       dplyr::pull(text) %>% 
-      readr::read_lines(.)
-    text<-text[stringr::str_detect(text,"BIS Review",negate = T)]
-    text<-text[stringr::str_detect(text,"BIS central bankers’ speeches",negate = T)]
-    
-    text<-list(text)
-  }else{
-    link<-paste0(column[1],".htm")
-    text<-html_site %>% rvest::html_nodes(xpath = "//div[@id='cmsContent']") %>% 
-      rvest::html_text()%>%
-      readr::read_lines()#%>% 
-      #paste(collapse = " ")
-    text<-list(text)
+      readr::read_lines()
+    text <- text[!stringr::str_detect(text, "BIS Review|BIS central bankers’ speeches")]
+  } else {
+    link <- paste0(url_base, ".htm")
+    text <- html_site %>% 
+      rvest::html_nodes(xpath = "//div[@id='cmsContent']") %>%
+      rvest::html_text() %>%
+      readr::read_lines()
   }
+  text <- list(text)
   
-  access_time<-Sys.time()
-  language<-names(which.max(table(cld3::detect_language(text[[1]]))))
-  type="speech"
+  # Get access time and language
+  access_time <- Sys.time()
+  language <- names(which.max(table(cld3::detect_language(text[[1]]))))
+  type <- "speech"
   
-  #fill gaps
-  
-  # if(is.na(start_date)){
-      #if no date can be found in description use information from bis site
-  #   Sys.setlocale("LC_ALL","English")
-  #   date_NA <- function(x) tryCatch(as.Date(x, tryFormats = c("%d/%m/%y","%m/%d/%y", "%Y/%m/%d",
-  #                                                             "%d %B %Y","%d %B, %Y","%d %B. %Y","%B %d, %Y","%dth %B %Y","%d.%m.%y")), error = function(e) NA)
-  #   dates<-html_site%>% 
-  #     rvest::html_element(".date")%>% 
-  #     rvest::html_text() %>%
-  #     date_NA()
-  #   start_date<-dates
-  #   end_date<-dates
-  # }
-  
-  if(is.na(start_date)){
-    dates<-get_date_from_text(text[[1]]$text %>% paste(.,collapse = " "),"bis","speech")
-    start_date<-dates$start_date
-    end_date<-dates$end_date
+  # Check for NA in start_date and speaker
+  if (is.na(start_date)) {
+    dates <- get_date_from_text(paste(text[[1]], collapse = " "), "bis", "speech")
+    start_date <- dates$start_date
+    end_date <- dates$end_date
   }
   if(is.na(speaker)){
     speaker<-html_site %>% 
@@ -91,46 +77,52 @@ get_bis_features<-function(column,countries_cb){
   return(dplyr::tibble(title,speaker,start_date,end_date,release_date,speaker_position,event,cb,country,type,text,link,access_time,language))
 }
 
-search_cb<-function(strings,aux_string,countrys){
-  dat<-data.frame(country=rep(NA,length(strings)),cb=rep(NA,length(strings)))
-  for (i in 1:length(strings)){
+search_cb <- function(strings, aux_string, countrys) {
+  
+  # Initialize empty data frame
+  dat <- data.frame(country = rep(NA, length(strings)), 
+                    cb = rep(NA, length(strings)), 
+                    stringsAsFactors = FALSE)
+  
+  # Loop over strings
+  for (i in seq_along(strings)) {
     
-    if(nrow(countrys %>% 
-            dplyr::filter(stringr::str_detect(strings[i],countrys %>% 
-                                              dplyr::pull(cb))))==0){
-      #if central bank cannot found use country names
-      dat_temp<-countrys %>% 
-        dplyr::filter(stringr::str_detect(strings[i],countrys %>% 
-                                            dplyr::pull(country)))
-    }else{
-      #else use cb names
-      dat_temp<-countrys %>% 
-        dplyr::filter(stringr::str_detect(strings[i],countrys %>% 
-                                            dplyr::pull(cb)))
-      if(nrow(dat_temp)>1){
-        dat_temp=dat_temp[1,]
+    # Attempt to find match in 'cb' column
+    dat_temp <- countrys %>% 
+      filter(str_detect(strings[i], countrys %>% pull(cb)))
+    if (nrow(dat_temp) == 0) {
+      # if central bank cannot be found, use country names
+      dat_temp <- countrys %>% 
+        filter(str_detect(strings[i], countrys %>% pull(country)))
+    } else {
+      # else use cb names
+      if (nrow(dat_temp) > 1) {
+        dat_temp <- dat_temp[1, , drop = FALSE]
       }
     }
     
-    #if speaker position gives no central bank or country use total description
-    if(nrow(dat_temp)==0){
-      dat_temp<-countrys %>% 
-        dplyr::filter(stringr::str_detect(aux_string[i],countrys %>% 
-                                            dplyr::pull(cb))) %>% 
-        .[1,]
+    # If speaker position gives no central bank or country, use total description
+    if (nrow(dat_temp) == 0) {
+      dat_temp <- countrys %>% 
+        filter(str_detect(aux_string[i], pull(cb)))
+      if (nrow(dat_temp) > 0) {
+        dat_temp <- dat_temp[1, , drop = FALSE]
+      }
     }
-    if(nrow(dat_temp)==0){
+    if (nrow(dat_temp) == 0) {
       print(aux_string[i])
-      dat_temp<-NA
+      dat_temp <- data.frame(country = NA, cb = NA, stringsAsFactors = FALSE)
     }
     
-    dat[i,]<-dat_temp
+    dat[i, ] <- dat_temp
   }
   
   return(dat)
 }
+
+
 extract_date<-function(x){
-  Sys.setlocale("LC_ALL","English")
+  Sys.setlocale("LC_ALL","en_US.UTF-8")
   x %>% 
     stringr::str_replace_all("March,","March") %>% 
     stringr::str_replace_all("Sept\\.","September") %>% 
@@ -164,26 +156,26 @@ extract_date<-function(x){
                                                  as.Date(date , format = c("%d %B %Y"))), origin = "1970-01-01"))) %>% 
     dplyr::pull(date)
 }
+
 get_last_date<-function(x){
   x%>%
     stringr::str_split(.,"-",simplify = T) %>% 
     dplyr::as_tibble(.,.name_repair = ~ vctrs::vec_as_names(..., repair = "unique", quiet = TRUE)) %>% 
     dplyr::select(2) %>% dplyr::pull() %>% stringr::str_remove(.,"^_") 
 }
-extract_position<-function(x){
-  out<-stringr::str_split(x,",",simplify = T)
-  out<-dplyr::as_tibble(out,.name_repair = ~ vctrs::vec_as_names(..., repair = "unique", quiet = TRUE))
+
+extract_position <- function(x) {
+  out <- stringr::str_split(x, ",", simplify = TRUE)
   
-  if(ncol(out)>1){
-    out<-dplyr::mutate_at(out,"...2", trimws)
-    out<-dplyr::select(out,2)
-    out<-dplyr::pull(out)
+  if (ncol(out) > 1) {
+    out <- dplyr::tibble(position = trimws(out[, 2]))
+    out <- dplyr::pull(out, position)
     return(out)
-  }else{
+  } else {
     return(NA)
   }
-  
 }
+
 extract_event<-function(x){
   x1<-dplyr::tibble(spacyr::entity_extract(spacyr::spacy_parse(x)))
   x1<-dplyr::filter(x1,entity_type=="GPE")
