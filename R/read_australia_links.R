@@ -1,5 +1,9 @@
 read_australia_minutes_links<-function(){
-  links<-lapply(as.list(2006:lubridate::year(Sys.time())),read_htmlcb,part1="https://www.rba.gov.au/monetary-policy/rba-board-minutes/",part2="/") %>% 
+  links<-lapply(
+    as.list(2006:lubridate::year(Sys.time())),
+    read_htmlcb,
+    part1="https://www.rba.gov.au/monetary-policy/rba-board-minutes/",
+    part2="/") %>% 
     unlist()%>% 
     dplyr::as_tibble() %>% 
     dplyr::group_by(value) %>% 

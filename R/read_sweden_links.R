@@ -12,7 +12,8 @@ read_sweden_minutes_links<-function(){
    archiv<-paste0("http://archive.riksbank.se/en/Web-archive/Published/Minutes-of-the-Executive-Boards-monetary-policy-meetings/",archiv)
   
    archiv<-archiv[archiv!="http://archive.riksbank.se/en/Web-archive/Published/Minutes-of-the-Executive-Boards-monetary-policy-meetings/2008/Unanimous-Board-lowered-the-repo-rate-to-425-per-cent/index.html"]
-  get_pdf_links<-function(link){
+  
+   get_pdf_links<-function(link){
     links<-xml2::read_html(paste0(link))%>%
       rvest::html_nodes("a")%>%
       rvest::html_attr("href") 

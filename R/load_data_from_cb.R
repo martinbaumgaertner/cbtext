@@ -6,32 +6,23 @@ load_data_from_cb<-function(links,type,cb){
     #unlist()
   tib$link<-links
   tib$type<-type
-  if(cb=="boe"){
-    tib$cb<-"Bank of England"
-    tib$country<-"United Kingdom"
-  }else if(cb=="ecb"){
-    tib$cb<-"European Central Bank"
-    tib$country<-"Euro area"
-  }else if(cb=="fed"){
-    tib$cb<-"US Federal Reserve"
-    tib$country<-"United States"
-  }else if(cb=="boj"){
-    tib$cb<-"Bank of Japan"
-    tib$country<-"Japan"
-  }else if(cb=="poland"){
-    tib$cb<-"Narodowy Bank Polski"
-    tib$country<-"Poland"
-  }else if(cb=="iceland"){
-    tib$cb<-"Central Bank of Iceland"
-    tib$country<-"Iceland"
-  }else if(cb=="australia"){
-    tib$cb<-"Reserve Bank of Australia"
-    tib$country<-"Australia"
-  }else if(cb=="riksbank"){
-    tib$cb<-"Sveriges Riksbank"
-    tib$country<-"Sweden"
-  }else{
-    tib$cb<-cb
+  
+  country_map <- list(
+    boe = c("Bank of England", "United Kingdom"),
+    ecb = c("European Central Bank", "Euro area"),
+    fed = c("US Federal Reserve", "United States"),
+    boj = c("Bank of Japan", "Japan"),
+    poland = c("Narodowy Bank Polski", "Poland"),
+    iceland = c("Central Bank of Iceland", "Iceland"),
+    australia = c("Reserve Bank of Australia", "Australia"),
+    riksbank = c("Sveriges Riksbank", "Sweden")
+  )
+  
+  if (cb %in% names(country_map)) {
+    tib$cb <- country_map[[cb]][1]
+    tib$country <- country_map[[cb]][2]
+  } else {
+    tib$cb <- cb
   }
   
   dates<-get_date_from_text(tib,cb,type,links)

@@ -27,31 +27,27 @@ read_text<-function(x,sour){
   }
 
 clean_html<-function(x){
-  if(stringr::str_detect(x,"#")){
-    x1<-suppressMessages(xml2::read_html(x))
-  }else{
-    x1<-suppressMessages(xml2::read_html(url(x)))
-  }
+  x1 <- ifelse(stringr::str_detect(x, "#"),
+               suppressMessages(xml2::read_html(x)),
+               suppressMessages(xml2::read_html(url(x))))
+  
   #fedheading
-  heading<-x1%>%
-    rvest::html_nodes(".jumbotron.hidden-xs")
+  heading<-x1%>% rvest::html_nodes(".jumbotron.hidden-xs")
   xml2::xml_remove(heading)
+  
   #fed sidebar
-  navbar<-x1 %>% 
-    rvest::html_nodes(".nav__header")
+  navbar<-x1 %>% rvest::html_nodes(".nav__header")
   xml2::xml_remove(navbar)
+  
   #ecb footer
-  footer_ecb<-x1 %>% 
-    rvest::html_nodes(".ecb-footerBottom")
+  footer_ecb<-x1 %>% rvest::html_nodes(".ecb-footerBottom")
   xml2::xml_remove(footer_ecb)
-  adress_ecb<-x1 %>% 
-    rvest::html_nodes(".address-box.-top-arrow")
+  
+  adress_ecb<-x1 %>% rvest::html_nodes(".address-box.-top-arrow")
   xml2::xml_remove(adress_ecb)
-  cookies_ecb<-x1 %>% 
-    rvest::html_nodes(".ecb-cookieConsent.hidden")
+  
+  cookies_ecb<-x1 %>% rvest::html_nodes(".ecb-cookieConsent.hidden")
   xml2::xml_remove(cookies_ecb)
-  
-  
   
   out<-x1
   return(out)
