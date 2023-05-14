@@ -42,7 +42,7 @@ devtools::install_github("martinbaumgaertner/cbtext")
 | Bank of Japan                     | `boj`       | `minutes` `economic_report release` `outlook_report`                                                                |
 | Sveriges Riksbank                 | `riksbank`  | `minutes` `mpreports` `economicreview`                                                                              |
 | Bank of England                   | `boe`       | `minutes`                                                                                                           |
-| Narodowy Bank Polski              | `poland`    | `minutes`                                                                                                           |
+| Narodowy Bank Polski              | `poland`    | `minutes` `inflation_report`                                                                                                            |
 | Central Bank of Iceland           | `iceland`   | `minutes`                                                                                                           |
 | Reserve Bank of Australia         | `australia` | `minutes`                                                                                                           |
 

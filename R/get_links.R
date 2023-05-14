@@ -54,6 +54,12 @@ if(source$name=="boe"){
       if(part=="minutes"){
         links<-read_poland_minute_links()
       }
+      if(part=="inflation_report"){
+        links<-read_poland_ir_links()
+      }
+      if(part=="release"){
+        links<-read_poland_release_links()
+      }
     }else if(source$name=="iceland"){
       if(part=="minutes"){
         links<-read_iceland_minute_links(part=part)
