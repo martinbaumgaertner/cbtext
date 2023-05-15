@@ -20,7 +20,7 @@
 #' }
 #' @rdname scrape_source
 #' @export 
-scrape_source<-function(source,parts){
+scrape_source<-function(source,parts,spacy=TRUE){
   output<-list()
   Sys.setlocale("LC_ALL","en_US.UTF-8")
   
@@ -29,7 +29,7 @@ scrape_source<-function(source,parts){
     if(part=="speeches"){
       links<-read_bis_links()
       countries_cb<-get_bis_countries()
-      output[[part]]<-load_data_from_bis(links,countries_cb)
+      output[[part]]<-load_data_from_bis(links,countries_cb,spacy)
     }else{
       links<-get_links(source,part=part)
       output[[part]]<-load_data_from_cb(links,part,source$name)

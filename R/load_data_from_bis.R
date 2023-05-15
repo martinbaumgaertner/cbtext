@@ -1,4 +1,4 @@
-get_bis_features <- function(column, countries_cb) {
+get_bis_features <- function(column, countries_cb,spacy) {
   
   # Check if column is a Tibble with 3 columns
   if (!tibble::is_tibble(column) || ncol(column) != 3) {
@@ -34,7 +34,13 @@ get_bis_features <- function(column, countries_cb) {
   
   # Extract speaker position, event, cb, country
   speaker_position <- extract_position(description)
-  event <- extract_event(description)
+  
+  if (spacy){
+    event <- extract_event(description)
+  } else {
+    event <-NA
+  }
+ 
   cb_country <- search_cb(speaker_position, description, countries_cb)
   cb <- cb_country$cb
   country <- cb_country$country
@@ -185,12 +191,12 @@ extract_event<-function(x){
 }
 
 
-load_data_from_bis<-function(links,countries_cb){
+load_data_from_bis<-function(links,countries_cb,spacy){
   #loop over all links and collect results in tibble
   bis_data<-list()
   pb<-utils::txtProgressBar(0,nrow(links),style=3)
   for(i in 1:nrow(links)){
-    bis_data[[i]]<-get_bis_features(links[i,],countries_cb)
+    bis_data[[i]]<-get_bis_features(links[i,],countries_cb,spacy)
     utils::setTxtProgressBar(pb, i)
   }
   close(pb)

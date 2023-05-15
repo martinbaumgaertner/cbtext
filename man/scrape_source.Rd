@@ -4,7 +4,7 @@
 \alias{scrape_source}
 \title{scrape_source}
 \usage{
-scrape_source(source, parts)
+scrape_source(source, parts, spacy = T)
 }
 \arguments{
 \item{source}{character vector describing central banks}
