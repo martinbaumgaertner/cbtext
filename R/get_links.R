@@ -40,6 +40,10 @@ if(source$name=="boe"){
       future::plan(future::multisession)
       links<-unlist(future.apply::future_lapply(as.list(2021:(lubridate::year(Sys.time()))), read_ecb_blog_links,future.seed=TRUE))
     }
+    if(part=="speeches"){
+      future::plan(future::multisession)
+      links<-unlist(future.apply::future_lapply(as.list(1997:(lubridate::year(Sys.time()))), read_ecb_speeches_links,future.seed=TRUE))
+    }
     }else if(source$name=="fed"){
       if(part=="minutes"){
         links<-read_fed_links(part=part,restrict_to = "html")
